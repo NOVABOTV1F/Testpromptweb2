@@ -2,15 +2,13 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>MAXUI - Prompt Hub</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0a0a1a;
-      color: #e0f7ff;
-      min-height: 100vh;
+      background: #0a0a1a; color: #e0f7ff; min-height: 100vh;
     }
     .sky {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -21,144 +19,188 @@
       border-radius: 50%; box-shadow: 0 0 4px #81d4fa;
       animation: twinkle var(--d) ease-in-out infinite;
     }
-    @keyframes twinkle {
-      0%,100% { opacity: 0.2; } 50% { opacity: 1; }
-    }
+    @keyframes twinkle { 0%,100%{opacity:.2} 50%{opacity:1} }
 
-    /* LOGIN SCREEN */
+    /* LOGIN */
     #loginScreen {
-      position: relative; z-index: 1;
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 20px;
+      position: relative; z-index: 1; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px;
     }
     .login-box {
-      width: 100%; max-width: 400px; background: rgba(5,15,25,0.9);
-      border: 1px solid rgba(79,195,247,0.4); border-radius: 16px;
+      width: 100%; max-width: 400px; background: rgba(5,15,25,.92);
+      border: 1px solid rgba(79,195,247,.4); border-radius: 16px;
       padding: 28px; text-align: center;
-      box-shadow: 0 0 30px rgba(79,195,247,0.15);
+      box-shadow: 0 0 30px rgba(79,195,247,.15);
     }
     .login-box h1 {
-      font-size: 26px; color: #4fc3f7; margin-bottom: 8px;
-      text-shadow: 0 0 20px rgba(79,195,247,0.5);
+      font-size: 28px; color: #4fc3f7; margin-bottom: 6px;
+      text-shadow: 0 0 20px rgba(79,195,247,.5);
     }
-    .login-box p { color: #81d4fa; font-size: 13px; margin-bottom: 22px; opacity: 0.8; }
+    .login-box p { color: #81d4fa; font-size: 13px; margin-bottom: 22px; opacity: .85; }
     .login-box input {
       width: 100%; padding: 14px; border-radius: 10px;
-      border: 1px solid rgba(79,195,247,0.4); background: rgba(0,0,0,0.5);
-      color: #e0f7ff; font-size: 16px; text-align: center;
-      letter-spacing: 1px; margin-bottom: 16px;
+      border: 1px solid rgba(79,195,247,.4); background: rgba(0,0,0,.5);
+      color: #e0f7ff; font-size: 15px; text-align: center; letter-spacing: 1px;
+      margin-bottom: 14px;
     }
     .login-box input:focus { outline: none; border-color: #4fc3f7; }
     .btn-login {
       width: 100%; padding: 14px; border: none; border-radius: 10px;
-      background: linear-gradient(135deg, #0277bd, #4fc3f7);
+      background: linear-gradient(135deg,#0277bd,#4fc3f7);
       color: #000; font-weight: 800; font-size: 16px; cursor: pointer;
     }
     .error-msg { color: #ff6b6b; font-size: 13px; margin-top: 12px; display: none; }
     .error-msg.show { display: block; }
 
-    /* MAIN SCREEN */
-    #mainScreen { display: none; position: relative; z-index: 1; padding-bottom: 40px; }
+    /* MAIN */
+    #mainScreen { display: none; position: relative; z-index: 1; padding-bottom: 80px; }
     #mainScreen.active { display: block; }
 
+    .header-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px; max-width: 640px; margin: 0 auto;
+    }
+    .user-key {
+      font-size: 12px; color: #81d4fa; opacity: .85;
+      max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-sm {
+      background: transparent; border: 1px solid #4fc3f7; color: #4fc3f7;
+      padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;
+    }
+    .btn-sm.danger { border-color: #ff6b6b; color: #ff6b6b; }
+
     .top-video {
-      width: 100%; max-width: 600px; margin: 0 auto 16px;
+      width: 100%; max-width: 640px; margin: 0 auto 8px;
       border-radius: 0 0 14px 14px; overflow: hidden;
-      border: 1px solid rgba(79,195,247,0.25);
+      border: 1px solid rgba(79,195,247,.25);
     }
     .top-video video { width: 100%; display: block; max-height: 220px; object-fit: cover; }
+    .sound-hint {
+      text-align: center; padding: 6px; font-size: 12px; color: #81d4fa;
+      cursor: pointer; background: rgba(0,0,0,.4);
+    }
 
     .search-wrap {
-      padding: 0 16px 16px; max-width: 600px; margin: 0 auto;
+      padding: 12px 16px; max-width: 640px; margin: 0 auto;
     }
     .search-wrap input {
       width: 100%; padding: 12px 16px; border-radius: 12px;
-      border: 1px solid rgba(79,195,247,0.35); background: rgba(5,15,25,0.9);
+      border: 1px solid rgba(79,195,247,.35); background: rgba(5,15,25,.9);
       color: #e0f7ff; font-size: 15px;
     }
     .search-wrap input:focus { outline: none; border-color: #4fc3f7; }
 
     .prompt-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px; padding: 0 16px; max-width: 600px; margin: 0 auto;
+      gap: 12px; padding: 0 16px 20px; max-width: 640px; margin: 0 auto;
     }
     .prompt-card {
-      background: rgba(5,15,25,0.9); border: 1px solid rgba(79,195,247,0.3);
+      background: rgba(5,15,25,.9); border: 1px solid rgba(79,195,247,.3);
       border-radius: 12px; padding: 14px; text-align: center; cursor: pointer;
-      transition: all 0.2s;
+      transition: .2s;
     }
-    .prompt-card:hover { border-color: #4fc3f7; box-shadow: 0 0 16px rgba(79,195,247,0.2); }
+    .prompt-card:active { transform: scale(.97); }
     .prompt-logo {
       width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 10px;
-      background: linear-gradient(135deg, #0277bd, #4fc3f7);
+      background: linear-gradient(135deg,#0277bd,#4fc3f7);
       display: flex; align-items: center; justify-content: center;
-      font-size: 20px; font-weight: 800; color: #000;
+      font-size: 18px; font-weight: 800; color: #000;
     }
-    .prompt-by { font-size: 12px; color: #81d4fa; margin-bottom: 4px; }
+    .prompt-by { font-size: 12px; color: #81d4fa; margin-bottom: 6px; }
     .prompt-rarity {
-      font-size: 11px; font-weight: 700; padding: 2px 8px;
+      font-size: 11px; font-weight: 700; padding: 3px 8px;
       border-radius: 20px; display: inline-block;
     }
-    .rarity-mudah { background: rgba(76,175,80,0.2); color: #81c784; }
-    .rarity-sedang { background: rgba(255,193,7,0.2); color: #ffd54f; }
-    .rarity-epic { background: rgba(156,39,176,0.2); color: #ce93d8; }
-    .rarity-legenda { background: rgba(255,87,34,0.2); color: #ff8a65; }
-    .rarity-mitik { background: rgba(244,67,54,0.25); color: #ef9a9a; }
+    .rarity-mudah { background: rgba(76,175,80,.2); color: #81c784; }
+    .rarity-sedang { background: rgba(255,193,7,.2); color: #ffd54f; }
+    .rarity-epic { background: rgba(156,39,176,.2); color: #ce93d8; }
+    .rarity-legenda { background: rgba(255,87,34,.2); color: #ff8a65; }
+    .rarity-mitik { background: rgba(244,67,54,.25); color: #ef9a9a; }
     .rarity-infinity { background: linear-gradient(90deg,#4fc3f7,#ce93d8); color: #000; }
 
-    /* Modal Prompt */
+    /* FAB tambah prompt */
+    .fab {
+      position: fixed; bottom: 24px; right: 24px; z-index: 50;
+      width: 56px; height: 56px; border-radius: 50%; border: none;
+      background: linear-gradient(135deg,#0277bd,#4fc3f7);
+      color: #000; font-size: 28px; font-weight: 800; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(79,195,247,.4);
+    }
+
+    /* MODAL */
     .modal {
       display: none; position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.85); align-items: center; justify-content: center;
-      padding: 20px;
+      background: rgba(0,0,0,.88); align-items: flex-end; justify-content: center;
+      padding: 0;
     }
     .modal.show { display: flex; }
     .modal-box {
-      background: #0d1a2a; border: 1px solid rgba(79,195,247,0.4);
-      border-radius: 16px; padding: 24px; width: 100%; max-width: 420px;
-      max-height: 80vh; overflow-y: auto;
+      background: #0d1a2a; border: 1px solid rgba(79,195,247,.4);
+      border-radius: 20px 20px 0 0; padding: 24px 20px 32px;
+      width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto;
     }
-    .modal-box h3 { color: #4fc3f7; margin-bottom: 12px; }
-    .modal-box .meta { font-size: 13px; color: #81d4fa; margin-bottom: 8px; }
-    .modal-box .prompt-text {
-      background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px;
-      font-size: 14px; line-height: 1.5; margin: 12px 0; white-space: pre-wrap;
+    .modal-box h3 { color: #4fc3f7; margin-bottom: 14px; font-size: 18px; }
+    .modal-box label {
+      display: block; font-size: 12px; color: #81d4fa; margin: 12px 0 4px;
     }
-    .modal-box .status {
-      display: inline-block; padding: 4px 10px; border-radius: 20px;
-      font-size: 12px; font-weight: 700; margin-top: 8px;
+    .modal-box input, .modal-box textarea, .modal-box select {
+      width: 100%; padding: 11px 12px; border-radius: 10px;
+      border: 1px solid rgba(79,195,247,.35); background: rgba(0,0,0,.45);
+      color: #e0f7ff; font-size: 14px;
     }
-    .status-pending { background: rgba(255,193,7,0.2); color: #ffd54f; }
-    .status-sukses { background: rgba(76,175,80,0.2); color: #81c784; }
-    .btn-close {
-      margin-top: 16px; width: 100%; padding: 12px; border: none;
-      border-radius: 10px; background: #4fc3f7; color: #000;
-      font-weight: 700; cursor: pointer;
+    .modal-box textarea { min-height: 90px; resize: vertical; }
+    .modal-box input:focus, .modal-box textarea:focus, .modal-box select:focus {
+      outline: none; border-color: #4fc3f7;
     }
+    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .modal-actions button {
+      flex: 1; padding: 13px; border-radius: 10px; font-weight: 700;
+      font-size: 14px; cursor: pointer; border: none;
+    }
+    .btn-primary { background: linear-gradient(135deg,#0277bd,#4fc3f7); color: #000; }
+    .btn-secondary { background: transparent; border: 1px solid #4fc3f7 !important; color: #4fc3f7; }
 
-    .header-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 16px; max-width: 600px; margin: 0 auto;
+    .detail-meta { font-size: 13px; color: #81d4fa; margin-bottom: 6px; }
+    .detail-prompt {
+      background: rgba(0,0,0,.4); padding: 12px; border-radius: 10px;
+      font-size: 14px; line-height: 1.55; margin: 12px 0; white-space: pre-wrap;
+      word-break: break-word;
     }
-    .header-bar .user-key {
-      font-size: 12px; color: #81d4fa; opacity: 0.8;
-      max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    .status-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; margin-top: 6px;
     }
-    .btn-logout {
-      background: transparent; border: 1px solid #4fc3f7; color: #4fc3f7;
-      padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;
+    .status-pending { background: rgba(255,193,7,.2); color: #ffd54f; }
+    .status-sukses { background: rgba(76,175,80,.2); color: #81c784; }
+
+    .global-chat {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 90;
+      background: linear-gradient(90deg,#0277bd,#4fc3f7);
+      color: #000; text-align: center; padding: 8px 12px;
+      font-size: 13px; font-weight: 700; display: none;
+    }
+    .global-chat.show { display: block; animation: slideDown .3s ease; }
+    @keyframes slideDown { from{transform:translateY(-100%)} to{transform:translateY(0)} }
+
+    .empty-state {
+      text-align: center; padding: 40px 20px; color: #81d4fa; opacity: .7;
+      grid-column: 1 / -1;
     }
   </style>
 </head>
 <body>
   <div class="sky" id="sky"></div>
+  <div class="global-chat" id="globalChat"></div>
 
   <!-- LOGIN -->
   <div id="loginScreen">
     <div class="login-box">
       <h1>MAXUI</h1>
-      <p>Masukkan key untuk masuk</p>
-      <input type="text" id="keyInput" placeholder="MAXUI_XXXX_XXXX_XXXX" autocomplete="off">
+      <p>Masukkan key untuk masuk ke Prompt Hub</p>
+      <input type="text" id="keyInput" placeholder="MAXUI_XXXX_XXXX_XXXX" autocomplete="off" autocapitalize="characters">
       <button class="btn-login" onclick="doLogin()">MASUK</button>
       <div class="error-msg" id="loginError">Key tidak valid atau sudah expired</div>
     </div>
@@ -168,70 +210,137 @@
   <div id="mainScreen">
     <div class="header-bar">
       <div class="user-key" id="userKeyDisplay">—</div>
-      <button class="btn-logout" onclick="doLogout()">Keluar</button>
+      <div class="header-actions">
+        <button class="btn-sm" id="btnAdmin" style="display:none" onclick="openAdmin()">Admin</button>
+        <button class="btn-sm danger" onclick="doLogout()">Keluar</button>
+      </div>
     </div>
 
     <div class="top-video">
-      <video autoplay loop muted playsinline>
+      <video id="mainVideo" autoplay loop muted playsinline>
         <source src="https://raw.githubusercontent.com/NOVABOTV1F/BOT_KEY_WEB/main/tiktokio.com1791268330_39vUti4Rh3XA5sskjclN.mp4" type="video/mp4">
       </video>
+      <div class="sound-hint" onclick="unmuteVideo()">🔊 Ketuk untuk nyalakan suara</div>
     </div>
 
     <div class="search-wrap">
       <input type="text" id="searchInput" placeholder="Cari prompt..." oninput="filterPrompts()">
     </div>
 
-    <div class="prompt-grid" id="promptGrid">
-      <!-- Prompt cards will be injected here -->
+    <div class="prompt-grid" id="promptGrid"></div>
+
+    <button class="fab" onclick="openCreate()" title="Buat Prompt">+</button>
+  </div>
+
+  <!-- MODAL DETAIL -->
+  <div class="modal" id="detailModal">
+    <div class="modal-box">
+      <h3>Detail Prompt</h3>
+      <div class="detail-meta" id="dBy">By: —</div>
+      <div class="detail-meta" id="dRarity">Rarity: —</div>
+      <div class="detail-prompt" id="dPrompt">—</div>
+      <div class="detail-meta" id="dKet">Keterangan: —</div>
+      <div class="status-badge" id="dStatus">Pending</div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('detailModal')">Tutup</button>
+      </div>
     </div>
   </div>
 
-  <!-- MODAL -->
-  <div class="modal" id="promptModal">
+  <!-- MODAL CREATE -->
+  <div class="modal" id="createModal">
     <div class="modal-box">
-      <h3 id="modalTitle">Prompt</h3>
-      <div class="meta" id="modalBy">By: —</div>
-      <div class="meta" id="modalRarity">Rarity: —</div>
-      <div class="prompt-text" id="modalPrompt">—</div>
-      <div class="meta" id="modalKet">Keterangan: —</div>
-      <div class="status" id="modalStatus">Pending</div>
-      <button class="btn-close" onclick="closeModal()">Tutup</button>
+      <h3>Buat Prompt Baru</h3>
+      <label>Nama / By</label>
+      <input type="text" id="cBy" placeholder="Nama kamu" maxlength="30">
+      <label>Rarity (pilih dulu, admin bisa ubah)</label>
+      <select id="cRarity">
+        <option value="Mudah">Mudah</option>
+        <option value="Sedang">Sedang</option>
+        <option value="Epic">Epic</option>
+        <option value="Legenda">Legenda</option>
+        <option value="Mitik">Mitik</option>
+        <option value="Infinity">Infinity</option>
+      </select>
+      <label>Prompt</label>
+      <textarea id="cPrompt" placeholder="Tulis prompt kamu di sini..." maxlength="2000"></textarea>
+      <label>Keterangan (opsional)</label>
+      <input type="text" id="cKet" placeholder="Catatan singkat" maxlength="120">
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('createModal')">Batal</button>
+        <button class="btn-primary" onclick="submitPrompt()">Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN -->
+  <div class="modal" id="adminModal">
+    <div class="modal-box">
+      <h3>Admin Panel</h3>
+      <label>Global Chat (tampil 15 detik)</label>
+      <input type="text" id="aChat" placeholder="Pesan global..." maxlength="100">
+      <div class="modal-actions" style="margin-bottom:16px">
+        <button class="btn-primary" onclick="sendGlobalChat()">Kirim Chat Global</button>
+      </div>
+      <label>Daftar Prompt (Pending)</label>
+      <div id="adminList" style="max-height:240px;overflow-y:auto;margin-top:8px"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('adminModal')">Tutup</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // Bintang
-    (function() {
+    // ===== STARS =====
+    (function(){
       var sky = document.getElementById('sky');
-      for (var i = 0; i < 50; i++) {
-        var s = document.createElement('div');
-        s.className = 'star';
-        s.style.left = Math.random()*100 + '%';
-        s.style.top = Math.random()*100 + '%';
-        s.style.setProperty('--d', (1.5 + Math.random()*3) + 's');
+      for(var i=0;i<45;i++){
+        var s=document.createElement('div');
+        s.className='star';
+        s.style.left=Math.random()*100+'%';
+        s.style.top=Math.random()*100+'%';
+        s.style.setProperty('--d',(1.5+Math.random()*3)+'s');
         sky.appendChild(s);
       }
     })();
 
-    // Data prompt contoh (nanti diganti dari database)
-    var prompts = [
-      { id:1, by:"Admin", rarity:"Epic", prompt:"Buatkan gambar anime girl dengan gaya cyberpunk", ket:"Cocok untuk wallpaper", status:"Sukses" },
-      { id:2, by:"User1", rarity:"Mudah", prompt:"Logo simple untuk toko online", ket:"Minimalis", status:"Pending" },
-      { id:3, by:"User2", rarity:"Legenda", prompt:"Scene battle fantasy epik", ket:"Detail tinggi", status:"Sukses" },
-      { id:4, by:"Admin", rarity:"Mitik", prompt:"Karakter infinity dengan aura biru", ket:"Khusus", status:"Sukses" },
-      { id:5, by:"User3", rarity:"Sedang", prompt:"Background landscape malam berbintang", ket:"Aesthetic", status:"Pending" },
-      { id:6, by:"User4", rarity:"Infinity", prompt:"Prompt rahasia infinity", ket:"Tertinggi", status:"Sukses" }
-    ];
+    // ===== DATA =====
+    var ADMIN_PASSWORD = 'maxuiadmin'; // ganti sendiri nanti
+    var currentKey = '';
+    var isAdmin = false;
+    var prompts = [];
 
-    function getSavedKey() {
+    function loadPrompts() {
       try {
-        var data = JSON.parse(localStorage.getItem('mKeys') || '[]');
+        prompts = JSON.parse(localStorage.getItem('maxui_prompts') || '[]');
+      } catch(e) { prompts = []; }
+      // seed contoh kalau kosong
+      if (prompts.length === 0) {
+        prompts = [
+          {id:1, by:'Admin', rarity:'Epic', prompt:'Buatkan gambar anime girl gaya cyberpunk neon', ket:'Wallpaper', status:'Sukses', time:Date.now()},
+          {id:2, by:'UserDemo', rarity:'Mudah', prompt:'Logo simple toko online minimalis', ket:'Business', status:'Pending', time:Date.now()}
+        ];
+        savePrompts();
+      }
+    }
+    function savePrompts() {
+      localStorage.setItem('maxui_prompts', JSON.stringify(prompts));
+    }
+
+    // ===== KEY CHECK =====
+    function getActiveKeyFromWeb1() {
+      try {
+        var arr = JSON.parse(localStorage.getItem('mKeys') || '[]');
         var now = Date.now();
-        for (var i=0; i<data.length; i++) {
-          if (data[i].expiresAt > now) return data[i];
+        for (var i=0;i<arr.length;i++) {
+          if (arr[i].expiresAt > now) return arr[i].key;
         }
       } catch(e){}
       return null;
+    }
+
+    function isValidFormat(key) {
+      return /^MAXUI_[A-Z0-9]{4}_[A-Z0-9]{4}_[A-Z0-9]{4}$/.test(key);
     }
 
     function doLogin() {
@@ -244,91 +353,222 @@
         err.classList.add('show');
         return;
       }
-
-      // Cek dari localStorage (hasil dari Web 1)
-      var saved = getSavedKey();
-      if (saved && saved.key.toUpperCase() === input) {
-        // Valid
-        localStorage.setItem('maxui_logged_key', input);
-        showMain(input);
+      if (!isValidFormat(input)) {
+        err.textContent = 'Format key salah (MAXUI_XXXX_XXXX_XXXX)';
+        err.classList.add('show');
         return;
       }
 
-      // Fallback: terima key format benar (untuk testing)
-      if (/^MAXUI_[A-Z0-9]{4}_[A-Z0-9]{4}_[A-Z0-9]{4}$/.test(input)) {
-        localStorage.setItem('maxui_logged_key', input);
-        showMain(input);
-        return;
+      // Cek apakah key ini aktif di Web 1 (localStorage)
+      var active = getActiveKeyFromWeb1();
+      if (active && active.toUpperCase() === input) {
+        // valid
+      } else {
+        // tetap izinkan format benar (untuk testing / key dari tempat lain)
+        // kalau mau ketat, uncomment baris di bawah:
+        // err.textContent = 'Key tidak aktif / sudah expired. Ambil key di Web 1 dulu.';
+        // err.classList.add('show');
+        // return;
       }
 
-      err.textContent = 'Key tidak valid atau sudah expired';
-      err.classList.add('show');
+      currentKey = input;
+      localStorage.setItem('maxui_logged_key', input);
+      isAdmin = false;
+      showMain();
     }
 
-    function showMain(key) {
+    function showMain() {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('mainScreen').classList.add('active');
-      document.getElementById('userKeyDisplay').textContent = key;
+      document.getElementById('userKeyDisplay').textContent = currentKey;
+      document.getElementById('btnAdmin').style.display = isAdmin ? 'inline-block' : 'none';
+      loadPrompts();
       renderPrompts(prompts);
+      unmuteOnInteract();
     }
 
     function doLogout() {
       localStorage.removeItem('maxui_logged_key');
+      currentKey = '';
+      isAdmin = false;
       document.getElementById('mainScreen').classList.remove('active');
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('keyInput').value = '';
     }
 
+    // ===== RENDER =====
     function renderPrompts(list) {
       var grid = document.getElementById('promptGrid');
       grid.innerHTML = '';
-      list.forEach(function(p) {
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state">Belum ada prompt.<br>Tekan tombol + untuk buat.</div>';
+        return;
+      }
+      // tampilkan yang Sukses dulu, lalu Pending
+      var sorted = list.slice().sort(function(a,b){
+        if (a.status === b.status) return (b.time||0)-(a.time||0);
+        return a.status === 'Sukses' ? -1 : 1;
+      });
+      sorted.forEach(function(p) {
         var card = document.createElement('div');
         card.className = 'prompt-card';
-        card.onclick = function() { openModal(p); };
-        var rarityClass = 'rarity-' + (p.rarity || 'mudah').toLowerCase();
-        card.innerHTML = `
-          <div class="prompt-logo">${(p.by || '?')[0]}</div>
-          <div class="prompt-by">By: ${p.by}</div>
-          <span class="prompt-rarity ${rarityClass}">${p.rarity}</span>
-        `;
+        card.onclick = function(){ openDetail(p); };
+        var rClass = 'rarity-' + (p.rarity||'mudah').toLowerCase();
+        card.innerHTML =
+          '<div class="prompt-logo">'+((p.by||'?')[0]||'?').toUpperCase()+'</div>'+
+          '<div class="prompt-by">By: '+(p.by||'-')+'</div>'+
+          '<span class="prompt-rarity '+rClass+'">'+(p.rarity||'-')+'</span>';
         grid.appendChild(card);
       });
     }
 
     function filterPrompts() {
-      var q = document.getElementById('searchInput').value.toLowerCase();
-      var filtered = prompts.filter(function(p) {
-        return (p.prompt + p.by + p.ket + p.rarity).toLowerCase().indexOf(q) !== -1;
+      var q = (document.getElementById('searchInput').value || '').toLowerCase();
+      var filtered = prompts.filter(function(p){
+        return ((p.prompt||'')+(p.by||'')+(p.ket||'')+(p.rarity||'')+(p.status||'')).toLowerCase().indexOf(q) !== -1;
       });
       renderPrompts(filtered);
     }
 
-    function openModal(p) {
-      document.getElementById('modalTitle').textContent = 'Detail Prompt';
-      document.getElementById('modalBy').textContent = 'By: ' + p.by;
-      document.getElementById('modalRarity').textContent = 'Rarity: ' + p.rarity;
-      document.getElementById('modalPrompt').textContent = p.prompt;
-      document.getElementById('modalKet').textContent = 'Keterangan: ' + p.ket;
-      var st = document.getElementById('modalStatus');
-      st.textContent = p.status;
-      st.className = 'status ' + (p.status === 'Sukses' ? 'status-sukses' : 'status-pending');
-      document.getElementById('promptModal').classList.add('show');
-    }
-    function closeModal() {
-      document.getElementById('promptModal').classList.remove('show');
+    // ===== DETAIL =====
+    function openDetail(p) {
+      document.getElementById('dBy').textContent = 'By: ' + (p.by||'-');
+      document.getElementById('dRarity').textContent = 'Rarity: ' + (p.rarity||'-');
+      document.getElementById('dPrompt').textContent = p.prompt || '-';
+      document.getElementById('dKet').textContent = 'Keterangan: ' + (p.ket||'-');
+      var st = document.getElementById('dStatus');
+      st.textContent = p.status || 'Pending';
+      st.className = 'status-badge ' + (p.status==='Sukses' ? 'status-sukses' : 'status-pending');
+      document.getElementById('detailModal').classList.add('show');
     }
 
-    // Auto login kalau sudah punya key aktif
-    window.addEventListener('load', function() {
-      var key = localStorage.getItem('maxui_logged_key');
-      var saved = getSavedKey();
-      if (key && saved && saved.key.toUpperCase() === key.toUpperCase()) {
-        showMain(key);
-      } else if (key) {
-        // Key tersimpan tapi mungkin sudah expired di web1
-        showMain(key);
+    // ===== CREATE =====
+    function openCreate() {
+      document.getElementById('cBy').value = '';
+      document.getElementById('cPrompt').value = '';
+      document.getElementById('cKet').value = '';
+      document.getElementById('cRarity').value = 'Mudah';
+      document.getElementById('createModal').classList.add('show');
+    }
+
+    function submitPrompt() {
+      var by = document.getElementById('cBy').value.trim();
+      var prompt = document.getElementById('cPrompt').value.trim();
+      var ket = document.getElementById('cKet').value.trim();
+      var rarity = document.getElementById('cRarity').value;
+
+      if (!by) { alert('Isi nama / By dulu'); return; }
+      if (!prompt) { alert('Isi prompt dulu'); return; }
+      if (prompt.length < 5) { alert('Prompt terlalu pendek'); return; }
+
+      var item = {
+        id: Date.now(),
+        by: by,
+        rarity: rarity,
+        prompt: prompt,
+        ket: ket || '-',
+        status: 'Pending',
+        time: Date.now(),
+        key: currentKey
+      };
+      prompts.unshift(item);
+      savePrompts();
+      closeModal('createModal');
+      renderPrompts(prompts);
+      alert('✅ Prompt terkirim!\nStatus: Pending (menunggu admin)');
+    }
+
+    // ===== ADMIN =====
+    function openAdmin() {
+      if (!isAdmin) {
+        var pass = prompt('Password Admin:');
+        if (pass !== ADMIN_PASSWORD) {
+          alert('Password salah');
+          return;
+        }
+        isAdmin = true;
+        document.getElementById('btnAdmin').style.display = 'inline-block';
       }
+      renderAdminList();
+      document.getElementById('adminModal').classList.add('show');
+    }
+
+    function renderAdminList() {
+      var box = document.getElementById('adminList');
+      var pending = prompts.filter(function(p){ return p.status === 'Pending'; });
+      if (!pending.length) {
+        box.innerHTML = '<div style="color:#81d4fa;font-size:13px;padding:8px 0">Tidak ada prompt pending</div>';
+        return;
+      }
+      box.innerHTML = pending.map(function(p){
+        return '<div style="border:1px solid rgba(79,195,247,.25);border-radius:10px;padding:10px;margin-bottom:8px">'+
+          '<div style="font-size:12px;color:#81d4fa">By: '+p.by+' · '+p.rarity+'</div>'+
+          '<div style="font-size:13px;margin:6px 0;word-break:break-word">'+p.prompt.substring(0,80)+(p.prompt.length>80?'...':'')+'</div>'+
+          '<div style="display:flex;gap:6px">'+
+            '<button onclick="adminAction('+p.id+',\'Sukses\')" style="flex:1;padding:8px;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Publish</button>'+
+            '<button onclick="adminAction('+p.id+',\'Ban\')" style="flex:1;padding:8px;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Ban</button>'+
+          '</div></div>';
+      }).join('');
+    }
+
+    function adminAction(id, action) {
+      for (var i=0;i<prompts.length;i++) {
+        if (prompts[i].id === id) {
+          if (action === 'Ban') {
+            prompts.splice(i,1);
+            alert('Prompt di-ban / dihapus');
+          } else {
+            prompts[i].status = 'Sukses';
+            alert('Prompt di-Publish (Sukses)');
+          }
+          break;
+        }
+      }
+      savePrompts();
+      renderAdminList();
+      renderPrompts(prompts);
+    }
+
+    function sendGlobalChat() {
+      var msg = document.getElementById('aChat').value.trim();
+      if (!msg) { alert('Isi pesan dulu'); return; }
+      var el = document.getElementById('globalChat');
+      el.textContent = '📢 ' + msg;
+      el.classList.add('show');
+      document.getElementById('aChat').value = '';
+      setTimeout(function(){ el.classList.remove('show'); }, 15000);
+    }
+
+    // ===== MODAL HELPERS =====
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    // ===== SOUND =====
+    function unmuteVideo() {
+      var v = document.getElementById('mainVideo');
+      if (v) {
+        v.muted = false;
+        v.volume = 0.7;
+        v.play().catch(function(){});
+      }
+    }
+    function unmuteOnInteract() {
+      document.addEventListener('click', function(){
+        var v = document.getElementById('mainVideo');
+        if (v && v.muted) { v.muted=false; v.volume=0.7; }
+      }, {once:true});
+    }
+
+    // ===== INIT =====
+    window.addEventListener('load', function(){
+      var saved = localStorage.getItem('maxui_logged_key');
+      if (saved && isValidFormat(saved)) {
+        currentKey = saved;
+        showMain();
+      }
+      var v = document.getElementById('mainVideo');
+      if (v) { v.muted=true; v.play().catch(function(){}); }
     });
   </script>
 </body>

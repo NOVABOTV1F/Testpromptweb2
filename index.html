@@ -305,7 +305,7 @@
     })();
 
     // ===== DATA =====
-    var ADMIN_PASSWORD = 'maxuiadmin'; // ganti sendiri nanti
+    var ADMIN_KEY = 'MAXUI_ADMIN_KEY_2026'; // Key khusus admin - ganti sendiri
     var currentKey = '';
     var isAdmin = false;
     var prompts = [];
@@ -340,6 +340,7 @@
     }
 
     function isValidFormat(key) {
+      if (key === ADMIN_KEY) return true;
       return /^MAXUI_[A-Z0-9]{4}_[A-Z0-9]{4}_[A-Z0-9]{4}$/.test(key);
     }
 
@@ -373,7 +374,8 @@
 
       currentKey = input;
       localStorage.setItem('maxui_logged_key', input);
-      isAdmin = false;
+      // Cek apakah ini key admin
+      isAdmin = (input === ADMIN_KEY);
       showMain();
     }
 
@@ -481,13 +483,8 @@
     // ===== ADMIN =====
     function openAdmin() {
       if (!isAdmin) {
-        var pass = prompt('Password Admin:');
-        if (pass !== ADMIN_PASSWORD) {
-          alert('Password salah');
-          return;
-        }
-        isAdmin = true;
-        document.getElementById('btnAdmin').style.display = 'inline-block';
+        alert('Akses admin ditolak. Gunakan Key Admin.');
+        return;
       }
       renderAdminList();
       document.getElementById('adminModal').classList.add('show');
@@ -565,6 +562,7 @@
       var saved = localStorage.getItem('maxui_logged_key');
       if (saved && isValidFormat(saved)) {
         currentKey = saved;
+        isAdmin = (saved === ADMIN_KEY);
         showMain();
       }
       var v = document.getElementById('mainVideo');
